@@ -30,6 +30,7 @@ ChatBot::ChatBot(std::string filename)
     _image = new wxBitmap(filename, wxBITMAP_TYPE_PNG);
 }
 
+// destructor: 1 of 5
 ChatBot::~ChatBot()
 {
     std::cout << "ChatBot Destructor" << std::endl;
@@ -43,9 +44,53 @@ ChatBot::~ChatBot()
 }
 
 //// STUDENT CODE
-////
+////Copy constructor : 2 of 5
 
-////
+ ChatBot::ChatBot(const ChatBot &source) // 2 : copy constructor
+    {
+        _image = new wxBitmap();
+        *_image = *source._image;
+        std::cout << "Chatbot copy constructor" << std::endl;
+        std::cout << "COPYING content of instance " << &source << " to instance " << this << std::endl;
+    }
+
+////Copy assignment operator : 3 of 5
+
+ ChatBot& ChatBot::operator=(const ChatBot &source) // 3 : copy assignment operator
+    {
+        std::cout << "ASSIGNING content of instance " << &source << " to instance " << this << std::endl;
+        if (this == &source)
+            return *this;
+        delete[] _image;
+        _image = new wxBitmap();
+        *_image = *source._image;
+        return *this;
+    }
+
+////Move constructor : 4 of 5
+
+ChatBot::ChatBot (ChatBot &&source) // 4 : move constructor
+    {
+        std::cout << "MOVING (c’tor) instance " << &source << " to instance " << this << std::endl;
+        _image = source._image;
+        source._image = nullptr;
+    }
+
+////Move assignment operator : 5 of 5   
+
+
+ChatBot& ChatBot::operator=(ChatBot &&source) // 5 : move assignment operator
+    {
+        std::cout << "MOVING (assign) instance " << &source << " to instance " << this << std::endl;
+        if (this == &source)
+            return *this;
+
+        delete[] _image;
+        _image = source._image;
+        source._image = nullptr;
+        return *this;
+    }
+
 //// EOF STUDENT CODE
 
 void ChatBot::ReceiveMessageFromUser(std::string message)
