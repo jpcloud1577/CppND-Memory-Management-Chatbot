@@ -20,7 +20,7 @@ ChatBot::ChatBot()
 // constructor WITH memory allocation
 ChatBot::ChatBot(std::string filename)
 {
-    std::cout << "ChatBot Constructor" << std::endl;
+    std::cout << "ChatBot Constructor " << this << std::endl;
     
     // invalidate data handles
     _chatLogic = nullptr;
@@ -33,7 +33,7 @@ ChatBot::ChatBot(std::string filename)
 // destructor: 1 of 5
 ChatBot::~ChatBot()
 {
-    std::cout << "ChatBot Destructor" << std::endl;
+    std::cout << "ChatBot Destructor " << this << std::endl;
 
     // deallocate heap memory
     if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
@@ -51,6 +51,7 @@ ChatBot::~ChatBot()
         _image = new wxBitmap(*source._image);
         _chatLogic = source._chatLogic;
         _rootNode = source._rootNode;
+    //    _chatLogic->SetChatbotHandle(this);
         std::cout << "Chatbot copy constructor" << std::endl;
         std::cout << "COPYING content of instance " << &source << " to instance " << this << std::endl;
     }
@@ -66,6 +67,7 @@ ChatBot::~ChatBot()
        _image = new wxBitmap(*source._image);
         _chatLogic = source._chatLogic;
         _rootNode = source._rootNode;
+   //     _chatLogic->SetChatbotHandle(this);
         return *this;
     }
 
@@ -77,6 +79,7 @@ ChatBot::ChatBot (ChatBot &&source) // 4 : move constructor
         _image = source._image;
         _chatLogic = source._chatLogic;
         _rootNode = source._rootNode;
+    //    _chatLogic->SetChatbotHandle(this);
         source._image = nullptr;
         source._chatLogic = nullptr;
         source._rootNode = nullptr;
@@ -94,6 +97,8 @@ ChatBot& ChatBot::operator=(ChatBot &&source) // 5 : move assignment operator
 
         delete _image;
         _image = source._image;
+        _chatLogic = source._chatLogic;
+        _rootNode = source._rootNode;
         source._image = nullptr;
         source._chatLogic = nullptr;
         source._rootNode = nullptr;
@@ -147,6 +152,7 @@ void ChatBot::SetCurrentNode(GraphNode *node)
     std::uniform_int_distribution<int> dis(0, answers.size() - 1);
     std::string answer = answers.at(dis(generator));
 
+    _chatLogic->SetChatbotHandle(this);
     // send selected node answer to user
     _chatLogic->SendMessageToUser(answer);
 }
